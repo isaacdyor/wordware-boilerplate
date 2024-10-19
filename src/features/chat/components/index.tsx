@@ -14,7 +14,6 @@ export const Chat = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingDots, setLoadingDots] = useState("");
   const [error, setError] = useState<string | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -23,16 +22,6 @@ export const Chat = () => {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
   }, [messages]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isLoading) {
-      interval = setInterval(() => {
-        setLoadingDots((prev) => (prev.length >= 3 ? "" : prev + "."));
-      }, 200);
-    }
-    return () => clearInterval(interval);
-  }, [isLoading]);
 
   const handleSend = async () => {
     if (input.trim() && !isLoading) {
@@ -43,14 +32,25 @@ export const Chat = () => {
       setError(null);
 
       try {
-        const response = await sendMessageToWordware([
-          ...messages,
-          userMessage,
-        ]);
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: response },
-        ]);
+        const reader = await sendMessageToWordware([...messages, userMessage]);
+        const assistantMessage: Message = { role: "assistant", content: "" };
+        setMessages((prev) => [...prev, assistantMessage]);
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = new TextDecoder().decode(value);
+          try {
+            const parsedChunk = JSON.parse(chunk);
+            if (parsedChunk.type === "chunk" && parsedChunk.content) {
+              assistantMessage.content += parsedChunk.content;
+              setMessages((prev) => [...prev.slice(0, -1), assistantMessage]);
+            }
+          } catch (e) {
+            console.error("Error parsing chunk:", e);
+          }
+        }
       } catch (error) {
         console.error("Error sending message to Wordware:", error);
         setError(
@@ -107,10 +107,7 @@ export const Chat = () => {
                 </AvatarFallback>
               </Avatar>
               <div className="mx-2 p-2 rounded-lg bg-secondary text-secondary-foreground">
-                <p className="text-sm">
-                  Thinking
-                  <span className="inline-block w-8">{loadingDots}</span>
-                </p>
+                <p className="text-sm">Thinking...</p>
               </div>
             </div>
           </div>
