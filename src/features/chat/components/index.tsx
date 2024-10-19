@@ -1,23 +1,21 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send } from "lucide-react";
+import { Bot, Send, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { sendMessageToWordware } from "../actions";
-
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+import { sendMessageToWordware, Message } from "../actions";
 
 export const Chat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    { role: "assistant", content: "Hello! How can I assist you today?" },
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingDots, setLoadingDots] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,105 +24,135 @@ export const Chat = () => {
     }
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLoading) {
+      interval = setInterval(() => {
+        setLoadingDots((prev) => (prev.length >= 3 ? "" : prev + "."));
+      }, 200);
+    }
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
-    const userMessage: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setIsLoading(true);
+  const handleSend = async () => {
+    if (input.trim() && !isLoading) {
+      const userMessage: Message = { role: "user", content: input };
+      setMessages((prev) => [...prev, userMessage]);
+      setInput("");
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const response = await sendMessageToWordware([...messages, userMessage]);
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let assistantMessage = "";
-
-      while (true) {
-        const { done, value } = await reader!.read();
-        if (done) break;
-        const chunk = decoder.decode(value);
-        assistantMessage += chunk;
-        setMessages((prev) => [
-          ...prev.slice(0, -1),
-          { role: "assistant", content: assistantMessage },
+      try {
+        const response = await sendMessageToWordware([
+          ...messages,
+          userMessage,
         ]);
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: response },
+        ]);
+      } catch (error) {
+        console.error("Error sending message to Wordware:", error);
+        setError(
+          error instanceof Error ? error.message : "An unknown error occurred"
+        );
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "Sorry, an error occurred. Please try again.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <ScrollArea className="flex-grow p-4" ref={scrollAreaRef}>
-        <div className="space-y-4">
-          {messages.map((message, index) => (
+    <div className="flex flex-col h-full ">
+      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`flex  ${
+              message.role === "user" ? "justify-end" : "justify-start"
+            } mb-4`}
+          >
             <div
-              key={index}
               className={`flex ${
-                message.role === "user" ? "justify-end" : "justify-start"
-              }`}
+                message.role === "user" ? "flex-row-reverse" : "flex-row"
+              } items-end max-w-[80%]`}
             >
-              <div className="flex items-end space-x-2 max-w-[80%]">
-                {message.role === "assistant" && (
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src="/assistant-avatar.png" alt="Assistant" />
-                    <AvatarFallback>AI</AvatarFallback>
-                  </Avatar>
-                )}
-                <CardContent
-                  className={`px-3 py-2 rounded-md ${
-                    message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
-                  }`}
-                >
-                  <p className="text-sm">{message.content}</p>
-                </CardContent>
-                {message.role === "user" && (
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src="/user-avatar.png" alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
-                  </Avatar>
-                )}
+              <Avatar className="w-8 h-8">
+                <AvatarFallback>
+                  {message.role === "user" ? (
+                    <User className="h-4 w-4" />
+                  ) : (
+                    <Bot className="h-4 w-4" />
+                  )}
+                </AvatarFallback>
+              </Avatar>
+              <div
+                className={`mx-2 p-2 rounded-lg ${
+                  message.role === "user"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start mb-4">
+            <div className="flex flex-row items-end max-w-[80%]">
+              <Avatar className="w-8 h-8">
+                <AvatarFallback>
+                  <Bot className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="mx-2 p-2 rounded-lg bg-secondary text-secondary-foreground">
+                <p className="text-sm">
+                  Thinking
+                  <span className="inline-block w-8">{loadingDots}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        {error && (
+          <div className="flex justify-start mb-4">
+            <div className="flex flex-row items-end max-w-[80%]">
+              <Avatar className="w-8 h-8">
+                <AvatarFallback>
+                  <Bot className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="mx-2 p-2 rounded-lg bg-red-100 text-red-800">
+                <p className="text-sm">Error: {error}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </ScrollArea>
-      <div className="p-4">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            sendMessage();
+
+      <div className="flex items-center gap-2">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your message here..."
+          className="flex-1"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSend();
+            }
           }}
-          className="flex space-x-2"
+          disabled={isLoading}
+        />
+        <Button
+          onClick={handleSend}
+          size="icon"
+          className="bg-primary hover:bg-primary/90"
+          disabled={isLoading}
         >
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            disabled={isLoading}
-            className="flex-grow"
-          />
-          <Button type="submit" disabled={isLoading} size="icon">
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
-            )}
-          </Button>
-        </form>
+          <Send className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
