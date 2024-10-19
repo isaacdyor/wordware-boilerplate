@@ -33,35 +33,35 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
 
-  const publicRoutes = ["/", "/signin", "/signup"];
-  const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
-  const isAuthRoute = ["/signin", "/signup"].includes(request.nextUrl.pathname);
+  // const publicRoutes = ["/", "/signin", "/signup"];
+  // const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
+  // const isAuthRoute = ["/signin", "/signup"].includes(request.nextUrl.pathname);
 
-  if (user) {
-    // User is logged in
-    if (isAuthRoute) {
-      // Redirect to home if trying to access login or signup
-      const url = request.nextUrl.clone();
-      url.pathname = "/dashboard";
-      return NextResponse.redirect(url);
-    }
-    // Allow access to all other routes
-    return supabaseResponse;
-  } else {
-    // No user
-    if (!isPublicRoute) {
-      // Redirect to login if trying to access a protected route
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
-    }
-    // Allow access to public routes
-    return supabaseResponse;
-  }
+  // if (user) {
+  //   // User is logged in
+  //   if (isAuthRoute) {
+  //     // Redirect to home if trying to access login or signup
+  //     const url = request.nextUrl.clone();
+  //     url.pathname = "/dashboard";
+  //     return NextResponse.redirect(url);
+  //   }
+  //   // Allow access to all other routes
+  //   return supabaseResponse;
+  // } else {
+  //   // No user
+  //   if (!isPublicRoute) {
+  //     // Redirect to login if trying to access a protected route
+  //     const url = request.nextUrl.clone();
+  //     url.pathname = "/signin";
+  //     return NextResponse.redirect(url);
+  //   }
+  //   // Allow access to public routes
+  //   return supabaseResponse;
+  // }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
