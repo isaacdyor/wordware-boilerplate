@@ -4,7 +4,7 @@ import { createPreset } from "fumadocs-ui/tailwind-plugin";
 const config: Config = {
   darkMode: ["class"],
   content: ["./src/**/*.tsx", "./node_modules/fumadocs-ui/dist/**/*.js"],
-  presets: [createPreset()],
+  presets: [createPreset({ preset: "neutral" })],
   theme: {
     extend: {
       colors: {

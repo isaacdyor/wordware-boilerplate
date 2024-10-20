@@ -11,7 +11,7 @@ export default function Page() {
       <div className="pointer-events-none absolute inset-0 -top-[280px] -z-30 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4.5rem_2rem] [transform:perspective(560px)_rotateX(-63deg)]" />
       <div className="pointer-events-none absolute top-0 -z-20 h-1/2 w-full bg-gradient-to-b from-transparent to-background" />
 
-      <div className="bg-gradient-radial fixed -z-10 h-full w-full rounded-full from-primary/20 via-primary/5 to-transparent blur-3xl" />
+      <div className="bg-gradient-radial fixed -z-10 h-full w-full rounded-full from-primary/45 via-primary/15 to-transparent blur-3xl dark:from-primary/15 dark:via-primary/5" />
 
       <h1 className="relative z-10 text-center text-4xl leading-tight sm:text-6xl md:text-7xl lg:text-8xl">
         AI SaaS Boilerplate
@@ -31,7 +31,10 @@ export default function Page() {
 
       <div className="flex gap-4">
         <Link
-          className={cn(buttonVariants({ variant: "outline" }), "flex gap-2")}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "flex gap-2 border-background hover:border-border",
+          )}
           href="/docs"
         >
           Docs

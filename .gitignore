@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+# fumadocs
+.source
+
 # next.js
 /.next/
 /out/
