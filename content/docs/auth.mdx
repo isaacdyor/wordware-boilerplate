@@ -1,0 +1,79 @@
+---
+title: Setting up Supabase OAuth
+description: Guide to setting up OAuth with Google and GitHub using Supabase
+---
+
+## Setting up OAuth with Supabase
+
+Supabase provides an easy way to implement OAuth authentication with various providers. This guide will focus on setting up OAuth with Google and GitHub.
+
+### Prerequisites
+
+Before you begin, make sure you have:
+
+1. A Supabase project set up
+2. Access to your Supabase project dashboard
+
+## Google OAuth Setup
+
+To set up Google OAuth:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Navigate to "APIs & Services" > "Credentials"
+4. Click "Create Credentials" and select "OAuth client ID"
+5. Choose "Web application" as the application type
+6. Add your Supabase project URL to the "Authorized JavaScript origins"
+7. Add your Supabase OAuth callback URL to the "Authorized redirect URIs"
+   - The callback URL format is: `https://<your-project>.supabase.co/auth/v1/callback`
+8. Click "Create" to generate your Client ID and Client Secret
+
+Once you have your credentials:
+
+1. Go to your Supabase project dashboard
+2. Navigate to "Authentication" > "Providers"
+3. Find "Google" in the list and enable it
+4. Enter your Google Client ID and Client Secret
+5. Save the changes
+
+## GitHub OAuth Setup
+
+To set up GitHub OAuth:
+
+1. Go to your GitHub account settings
+2. Navigate to "Developer settings" > "OAuth Apps"
+3. Click "New OAuth App"
+4. Fill in the application details:
+   - Application name: Your app's name
+   - Homepage URL: Your Supabase project URL
+   - Authorization callback URL: Your Supabase OAuth callback URL
+     - Format: `https://<your-project>.supabase.co/auth/v1/callback`
+5. Click "Register application"
+6. You'll receive a Client ID. Generate a new Client Secret
+
+Now, configure Supabase:
+
+1. Go to your Supabase project dashboard
+2. Navigate to "Authentication" > "Providers"
+3. Find "GitHub" in the list and enable it
+4. Enter your GitHub Client ID and Client Secret
+5. Save the changes
+
+## Implementing OAuth in Your Application
+
+With the OAuth providers set up, you can now implement the authentication flow in your application using Supabase's client libraries. Refer to the Supabase documentation for detailed implementation steps for your specific framework or technology stack.
+
+<Cards>
+  <Card
+    title="Supabase Auth Documentation"
+    href="https://supabase.com/docs/guides/auth"
+  />
+  <Card
+    title="Google OAuth Documentation"
+    href="https://developers.google.com/identity/protocols/oauth2"
+  />
+  <Card
+    title="GitHub OAuth Documentation"
+    href="https://docs.github.com/en/developers/apps/building-oauth-apps"
+  />
+</Cards>

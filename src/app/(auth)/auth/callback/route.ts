@@ -1,15 +1,18 @@
-import { NextResponse } from "next/server";
-// The client you created from the Server-Side Auth instructions
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { EmailOtpType } from "@supabase/supabase-js";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get("next") ?? "/";
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
+  const next = searchParams.get("next") ?? "/dashboard";
 
+  const supabase = createClient();
+
+  // Handle OAuth signin
   if (code) {
-    const supabase = createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && data.user) {
       const userData: { id: string; name?: string } = {
@@ -25,10 +28,10 @@ export async function GET(request: Request) {
         userData.name = data.user.user_metadata.full_name;
       }
 
-      const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
+      const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";
+
       if (isLocalEnv) {
-        // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`);
       } else if (forwardedHost) {
         return NextResponse.redirect(`https://${forwardedHost}${next}`);
@@ -36,8 +39,21 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}${next}`);
       }
     }
+    // If there's an error with OAuth, redirect to the error page
+    return NextResponse.redirect(`${origin}/auth/auth-code-error`);
   }
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  // Handle email confirmation
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({
+      type,
+      token_hash,
+    });
+    if (!error) {
+      return NextResponse.redirect(`${origin}${next}`);
+    }
+  }
+
+  // If neither OAuth code nor email confirmation token is present, or if there's an error
+  return NextResponse.redirect(`${origin}/error`);
 }

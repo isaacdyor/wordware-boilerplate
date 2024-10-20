@@ -1,27 +1,21 @@
 "use client";
 
-import { AuthForm } from "@/components/auth-form";
-import { createClient } from "@/lib/supabase/client";
+import { signin } from "@/actions/auth";
+import { AuthForm, AuthInput } from "@/components/auth-form";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Signup() {
-  const supabase = createClient();
+  const router = useRouter();
 
-  async function handleSignin({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  async function handleSignin(data: AuthInput) {
+    const { error } = await signin(data);
     if (error) {
-      console.error(error);
+      toast.error(error.message);
+    } else {
+      router.push("/dashboard");
     }
-    console.log(data);
   }
 
   return (
@@ -31,7 +25,7 @@ export default function Signup() {
       Link={
         <Link
           href="/signup"
-          className="flex items-center justify-center underline text-muted-foreground w-full text-sm pt-4"
+          className="flex w-full items-center justify-center pt-4 text-sm text-muted-foreground underline"
         >
           Don&apos;t have an account? Sign up
         </Link>

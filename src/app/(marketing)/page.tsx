@@ -1,7 +1,10 @@
+"use client";
+
 import { CopyText } from "@/components/landing-page/copy-text";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 
@@ -13,9 +16,14 @@ export default function Page() {
 
       <div className="bg-gradient-radial fixed -z-10 h-full w-full rounded-full from-primary/45 via-primary/15 to-transparent blur-3xl dark:from-primary/15 dark:via-primary/5" />
 
-      <h1 className="relative z-10 text-center text-4xl leading-tight sm:text-6xl md:text-7xl lg:text-8xl">
+      <motion.h1
+        className="relative z-10 text-center text-4xl leading-tight sm:text-6xl md:text-7xl lg:text-8xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
         AI SaaS Boilerplate
-      </h1>
+      </motion.h1>
 
       <p className="relative z-10 mt-0 max-w-[80%] text-center md:mt-4">
         An open-source starter kit based on{" "}

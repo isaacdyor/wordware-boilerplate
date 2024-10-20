@@ -33,8 +33,6 @@ export function NavUser() {
 
   const { user } = useUser();
 
-  console.log(user);
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -49,7 +47,9 @@ export function NavUser() {
                   src={user.user_metadata.avatar_url}
                   alt="Profile picture"
                 />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {user.email?.[0]}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <p className="truncate font-semibold">
@@ -74,7 +74,9 @@ export function NavUser() {
                     src={user.user_metadata.avatar_url}
                     alt="Profile picture"
                   />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {user.email?.[0]}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <p className="truncate font-semibold">

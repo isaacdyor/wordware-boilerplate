@@ -11,7 +11,7 @@ export const NavButtons: React.FC = () => {
         target="_blank"
         className={cn(
           buttonVariants({ variant: "secondary", size: "sm" }),
-          "flex w-full gap-2 border",
+          "flex w-full gap-2 border md:hover:border-muted-foreground/50 dark:md:hover:border-border",
         )}
       >
         GitHub

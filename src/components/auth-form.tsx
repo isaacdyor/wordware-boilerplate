@@ -54,7 +54,7 @@ export function AuthForm({ title, onSubmit, Link }: AuthFormProps) {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className="flex w-full flex-1 flex-col justify-center gap-2 "
+              className="flex w-full flex-1 flex-col justify-center gap-2"
             >
               <FormField
                 control={form.control}

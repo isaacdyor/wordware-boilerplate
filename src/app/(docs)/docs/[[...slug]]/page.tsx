@@ -34,8 +34,6 @@ export default function Page({
 
   const path = `apps/docs/content/docs/${page.file.path}`;
 
-  const MDX = page.data.body;
-
   return (
     <DocsPage
       toc={page.data.toc}
@@ -58,6 +56,7 @@ export default function Page({
         <page.data.body
           components={{
             ...defaultComponents,
+            ...defaultMdxComponents,
             Popup,
             PopupContent,
             PopupTrigger,
@@ -66,11 +65,9 @@ export default function Page({
             TypeTable,
             Accordion,
             Accordions,
-
             blockquote: Callout as unknown as FC<ComponentProps<"blockquote">>,
           }}
         />
-        <MDX components={{ ...defaultMdxComponents }} />
       </DocsBody>
     </DocsPage>
   );

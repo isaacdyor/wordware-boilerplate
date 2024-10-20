@@ -22,7 +22,7 @@ export default function Signup() {
       Link={
         <Link
           href="/signin"
-          className="flex items-center justify-center underline text-muted-foreground w-full text-sm pt-4"
+          className="flex w-full items-center justify-center pt-4 text-sm text-muted-foreground underline"
         >
           Already have an account? Sign in
         </Link>

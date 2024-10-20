@@ -1,22 +1,21 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+const supabase = createClient();
 
-export async function login({
+export async function signin({
   email,
   password,
 }: {
   email: string;
   password: string;
 }) {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  return { data, error };
+  return { error };
 }
 
 export async function signup({
@@ -26,14 +25,10 @@ export async function signup({
   email: string;
   password: string;
 }) {
-  const supabase = createClient();
-
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email,
     password,
   });
 
-  return { data, error };
+  return { error };
 }
