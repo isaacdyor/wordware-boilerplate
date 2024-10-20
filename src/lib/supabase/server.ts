@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { User } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 export function createClient() {
@@ -27,3 +28,18 @@ export function createClient() {
     }
   );
 }
+
+export const getUser = async (): Promise<{
+  user: User | null;
+  error: Error | null;
+}> => {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error) {
+    return { user: null, error };
+  }
+  return { user, error: null };
+};

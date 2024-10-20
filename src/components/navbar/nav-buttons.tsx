@@ -9,8 +9,8 @@ export const NavButtons: React.FC<{ isOpen?: boolean }> = ({ isOpen }) => {
         href="/signin"
         className={cn(
           buttonVariants({ variant: "secondary", size: "sm" }),
-          "h-8 w-full",
-          !isOpen ? "lg:w-auto lg:text-xs" : "null"
+          "w-full",
+          !isOpen ? "lg:w-auto" : "null"
         )}
       >
         Sign In
@@ -19,8 +19,8 @@ export const NavButtons: React.FC<{ isOpen?: boolean }> = ({ isOpen }) => {
         href="/signup"
         className={cn(
           buttonVariants({ size: "sm" }),
-          "h-8 w-full",
-          !isOpen ? "lg:w-auto lg:text-xs" : "null"
+          "w-full",
+          !isOpen ? "lg:w-auto" : "null"
         )}
       >
         Get started

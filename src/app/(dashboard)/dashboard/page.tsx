@@ -1,3 +1,3 @@
 export default function DashboardPage() {
-  return <p>hi</p>;
+  return <p className="font-black text-8xl">hi</p>;
 }

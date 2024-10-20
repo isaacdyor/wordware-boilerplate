@@ -10,12 +10,12 @@ import React from "react";
 
 const providers = [
   {
-    name: "google",
-    logo: GoogleLogo,
-  },
-  {
     name: "github",
     logo: GithubLogo,
+  },
+  {
+    name: "google",
+    logo: GoogleLogo,
   },
 ];
 
@@ -45,7 +45,9 @@ export const OAuthProviders: React.FC = () => {
             onClick={() => handleLogin(provider.name as Provider)}
           >
             <div className="flex items-center gap-2 group">
-              {provider.logo({ className: "group-hover:fill-primary" })}
+              {provider.logo({
+                className: "group-hover:fill-primary size-5",
+              })}
               <p>
                 Sign in with{" "}
                 {provider.name.charAt(0).toUpperCase() + provider.name.slice(1)}
