@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Logo } from "../logo";
 import { NavButtons } from "./nav-buttons";
 import { MobileNav } from "./mobile-nav";
+import { cn } from "@/lib/utils";
 
 export const navItems = [
   { title: "Home", href: "/" },
@@ -21,8 +22,8 @@ export const navItems = [
 
 export function Navbar() {
   return (
-    <div className="sticky top-0 z-40 border-b px-4 lg:px-24 xl:px-36">
-      <div className="  flex h-16 items-center justify-between">
+    <div className="sticky top-0 z-40 border-b px-4 lg:px-24 xl:px-36 bg-background/90 backdrop-blur-sm">
+      <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
             href="/"
@@ -36,7 +37,10 @@ export function Navbar() {
                 <NavigationMenuItem key={item.href}>
                   <Link href={item.href} legacyBehavior passHref>
                     <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent"
+                      )}
                     >
                       {item.title}
                     </NavigationMenuLink>

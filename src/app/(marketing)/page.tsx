@@ -1,3 +1,4 @@
+import { Hero } from "@/components/landing-page/hero";
 import TechStack from "@/components/landing-page/tech-stack";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,26 +7,7 @@ import { ChevronRight, Code, Shield, Sparkles, Zap } from "lucide-react";
 export default function Home() {
   return (
     <main className="flex-1">
-      <section className="w-full py-12 md:py-24 lg:py-32">
-        <div className=" px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-              Build Your AI SaaS in Record Time
-            </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Wordware Boilerplate: The fastest way to launch your AI-powered
-              SaaS. From idea to production in days, not months.
-            </p>
-            <div className="space-x-4">
-              <Button>Get Started</Button>
-              <Button variant="outline">
-                View on GitHub
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       <section
         id="features"
