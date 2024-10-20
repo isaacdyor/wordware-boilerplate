@@ -8,7 +8,102 @@ datasource db {
 }
 
 model User {
-  id    String   @id @default(cuid())
-  email String   @unique
-  name  String?
+  id              String        @id @default(uuid())
+  fullName        String?       @map("full_name")
+  avatarUrl       String?       @map("avatar_url")
+  billingAddress  Json?         @map("billing_address")
+  paymentMethod   Json?         @map("payment_method")
+  subscriptions   Subscription[]
+  customer        Customer?
+
+  @@map("users")
+}
+
+model Customer {
+  id               String @id
+  stripeCustomerId String @unique @map("stripe_customer_id")
+  user             User   @relation(fields: [id], references: [id])
+
+  @@map("customers")
+}
+
+model Product {
+  id          String  @id
+  active      Boolean
+  name        String
+  description String?
+  image       String?
+  metadata    Json?
+  prices      Price[]
+
+  @@map("products")
+}
+
+enum PricingType {
+  one_time
+  recurring
+
+  @@map("pricing_type")
+}
+
+enum PricingPlanInterval {
+  day
+  week
+  month
+  year
+
+  @@map("pricing_plan_interval")
+}
+
+model Price {
+  id               String               @id
+  productId        String               @map("product_id")
+  active           Boolean
+  description      String?
+  unitAmount       BigInt               @map("unit_amount")
+  currency         String
+  type             PricingType
+  interval         PricingPlanInterval?
+  intervalCount    Int?                 @map("interval_count")
+  trialPeriodDays  Int?                 @map("trial_period_days")
+  metadata         Json?
+  product          Product              @relation(fields: [productId], references: [id])
+  subscriptions    Subscription[]
+
+  @@map("prices")
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  canceled
+  incomplete
+  incomplete_expired
+  past_due
+  unpaid
+  paused
+
+  @@map("subscription_status")
+}
+
+model Subscription {
+  id                  String             @id
+  userId              String             @map("user_id")
+  status              SubscriptionStatus
+  metadata            Json?
+  priceId             String             @map("price_id")
+  quantity            Int
+  cancelAtPeriodEnd   Boolean            @map("cancel_at_period_end")
+  created             DateTime           @default(now())
+  currentPeriodStart  DateTime           @map("current_period_start")
+  currentPeriodEnd    DateTime           @map("current_period_end")
+  endedAt             DateTime?          @map("ended_at")
+  cancelAt            DateTime?          @map("cancel_at")
+  canceledAt          DateTime?          @map("canceled_at")
+  trialStart          DateTime?          @map("trial_start")
+  trialEnd            DateTime?          @map("trial_end")
+  user                User               @relation(fields: [userId], references: [id])
+  price               Price              @relation(fields: [priceId], references: [id])
+
+  @@map("subscriptions")
 }
