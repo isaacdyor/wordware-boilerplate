@@ -1,12 +1,18 @@
-import { DashboardLayout } from "@/components/layouts/dashboard-layout";
+import { AppSidebar } from "@/components/sidebar";
+import { SidebarBreadcrumbs } from "@/components/sidebar/sidebar-breadcrumbs";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = async ({
   children,
 }) => {
   return (
-    <>
-      <DashboardLayout>{children}</DashboardLayout>
-    </>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <SidebarBreadcrumbs />
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 

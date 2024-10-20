@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { OAuthProviders } from "@/features/auth/components/oauth";
+import { OAuthProviders } from "@/components/oauth";
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -34,7 +34,7 @@ export default function Signup() {
   });
 
   return (
-    <div className="h-screen w-full bg-background">
+    <div className="w-full bg-background">
       <div className="flex h-full items-center justify-center">
         <div className="w-full max-w-md p-8">
           <h1 className="mb-4 text-2xl font-semibold">Sign up</h1>
