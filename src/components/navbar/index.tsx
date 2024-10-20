@@ -22,7 +22,7 @@ export const navItems = [
 
 export function Navbar() {
   return (
-    <div className="sticky top-0 z-40 border-b px-4 lg:px-24 xl:px-36 bg-background/90 backdrop-blur-sm">
+    <div className="w-full top-0 z-40 absolute px-4 lg:px-24 xl:px-36 bg-transparent">
       <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
           <Link

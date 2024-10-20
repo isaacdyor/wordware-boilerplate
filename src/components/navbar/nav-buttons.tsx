@@ -1,27 +1,25 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
-export const NavButtons: React.FC<{ isOpen?: boolean }> = ({ isOpen }) => {
+export const NavButtons: React.FC = () => {
   return (
-    <div className="flex flex-col md:flex-row gap-2">
+    <div className="flex flex-col gap-2 md:flex-row">
       <Link
-        href="/signin"
+        href="https://github.com/isaacdyor/wordware-boilerplate"
+        target="_blank"
         className={cn(
           buttonVariants({ variant: "secondary", size: "sm" }),
-          "w-full",
-          !isOpen ? "lg:w-auto" : "null"
+          "flex w-full gap-2",
         )}
       >
-        Sign In
+        GitHub
+        <GitHubLogoIcon />
       </Link>
       <Link
         href="/signup"
-        className={cn(
-          buttonVariants({ size: "sm" }),
-          "w-full",
-          !isOpen ? "lg:w-auto" : "null"
-        )}
+        className={cn(buttonVariants({ size: "sm" }), "w-full")}
       >
         Get started
       </Link>

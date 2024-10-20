@@ -1,123 +1,54 @@
-import { Hero } from "@/components/landing-page/hero";
-import TechStack from "@/components/landing-page/tech-stack";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronRight, Code, Shield, Sparkles, Zap } from "lucide-react";
+import { CopyText } from "@/components/landing-page/copy-text";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { BookOpen } from "lucide-react";
+import Link from "next/link";
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="flex-1">
-      <Hero />
+    <div className="relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -top-[280px] -z-30 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4.5rem_2rem] [transform:perspective(560px)_rotateX(-63deg)]" />
+      <div className="pointer-events-none absolute top-0 -z-20 h-1/2 w-full bg-gradient-to-b from-transparent to-background" />
 
-      <section
-        id="features"
-        className="w-full py-12 md:py-24 lg:py-32 bg-secondary"
-      >
-        <div className=" px-4 md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-center mb-8">
-            Why Choose Wordware?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Zap,
-                title: "Lightning Fast Setup",
-                description:
-                  "Get your AI SaaS up and running in minutes with our pre-configured boilerplate.",
-              },
-              {
-                icon: Code,
-                title: "Production-Ready Code",
-                description:
-                  "Built with best practices and optimized for performance right out of the box.",
-              },
-              {
-                icon: Shield,
-                title: "Built-in Security",
-                description:
-                  "Robust authentication and authorization systems to keep your app and users safe.",
-              },
-              {
-                icon: Sparkles,
-                title: "AI-Ready Components",
-                description:
-                  "Pre-built components designed for AI interactions and data visualization.",
-              },
-            ].map((feature, index) => (
-              <Card key={index} className="bg-card">
-                <CardHeader>
-                  <feature.icon className="h-6 w-6 mb-2 text-primary" />
-                  <CardTitle>{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className="bg-gradient-radial fixed -z-10 h-full w-full rounded-full from-primary/20 via-primary/5 to-transparent blur-3xl" />
 
-      <TechStack />
+      <h1 className="relative z-10 text-center text-4xl leading-tight sm:text-6xl md:text-7xl lg:text-8xl">
+        AI SaaS Boilerplate
+      </h1>
 
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
-        <div className=" px-4 md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-center mb-8">
-            How It Works
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "1. Clone the Repo",
-                description:
-                  "Start with our pre-configured boilerplate and save weeks of setup time.",
-              },
-              {
-                step: "2. Customize Your App",
-                description:
-                  "Easily modify components and add your own AI-powered features.",
-              },
-              {
-                step: "3. Deploy and Scale",
-                description:
-                  "Launch your SaaS with one-click deployment and scale effortlessly.",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center text-center"
-              >
-                <div className="rounded-full bg-primary text-primary-foreground p-3 mb-4">
-                  <span className="text-xl font-bold">{index + 1}</span>
-                </div>
-                <h3 className="text-xl font-bold mb-2">{item.step}</h3>
-                <p className="text-muted-foreground">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <p className="relative z-10 mt-0 max-w-[80%] text-center md:mt-4">
+        An open-source starter kit based on{" "}
+        <Link href="https://www.wordware.ai/" className="underline">
+          Wordware
+        </Link>
+        .
+      </p>
 
-      <section className="w-full py-12 md:py-24 lg:py-32">
-        <div className=" px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-              Ready to Build Your AI SaaS?
-            </h2>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Get started with Wordware Boilerplate today and launch your
-              AI-powered SaaS in record time.
-            </p>
-            <div className="space-x-4">
-              <Button size="lg">Get Started</Button>
-              <Button variant="outline" size="lg">
-                View Documentation
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+      <div className="z-10 mb-8 mt-10">
+        <CopyText value="pnpm dlx degit isaacdyor/wordware-boilerplate ww" />
+      </div>
+
+      <div className="flex gap-4">
+        <Link
+          className={cn(buttonVariants({ variant: "outline" }), "flex gap-2")}
+          href="/docs"
+        >
+          Docs
+          <BookOpen className="h-4 w-4" />
+        </Link>
+        <Link
+          className={cn(buttonVariants(), "flex gap-2")}
+          href="https://github.com/isaacdyor/wordware-boilerplate"
+          target="_blank"
+        >
+          GitHub
+          <GitHubLogoIcon />
+        </Link>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 -bottom-[280px] -z-30 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4.5rem_2rem] [transform:perspective(560px)_rotateX(63deg)]" />
+      <div className="pointer-events-none absolute bottom-0 -z-20 h-1/2 w-full bg-gradient-to-b from-background to-transparent" />
+    </div>
   );
 }
