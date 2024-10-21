@@ -2,24 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 
-import { cn } from "@/lib/utils";
 import { getStripe } from "@/lib/stripe/client";
-import { checkoutWithStripe } from "@/utils/stripe/server";
+import { checkoutWithStripe } from "@/lib/stripe/server";
+import { cn } from "@/lib/utils";
+import { ProductWithPrices, SubscriptionWithProduct } from "@/types/stripe";
+import { Price } from "@prisma/client";
 import { User } from "@supabase/supabase-js";
 import { Cloud } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { Price, Product, Subscription } from "@prisma/client";
-
-interface ProductWithPrices extends Product {
-  prices: Price[];
-}
-interface PriceWithProduct extends Price {
-  products: Product | null;
-}
-interface SubscriptionWithProduct extends Subscription {
-  prices: PriceWithProduct | null;
-}
 
 interface Props {
   user: User | null | undefined;
@@ -30,6 +21,7 @@ interface Props {
 type BillingInterval = "lifetime" | "year" | "month";
 
 export function Pricing({ user, products, subscription }: Props) {
+  console.log(products);
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -142,9 +134,9 @@ export function Pricing({ user, products, subscription }: Props) {
               if (!price) return null;
               const priceString = new Intl.NumberFormat("en-US", {
                 style: "currency",
-                currency: price.currency!,
+                currency: price.currency,
                 minimumFractionDigits: 0,
-              }).format((price?.unit_amount || 0) / 100);
+              }).format(Number(price.unitAmount) / 100);
               return (
                 <div
                   key={product.id}
@@ -174,11 +166,10 @@ export function Pricing({ user, products, subscription }: Props) {
                       </span>
                     </p>
                     <Button
-                      variant="slim"
                       type="button"
-                      loading={priceIdLoading === price.id}
+                      isLoading={priceIdLoading === price.id}
                       onClick={() => handleStripeCheckout(price)}
-                      className="mt-8 block w-full rounded-md py-2 text-center text-sm font-semibold text-white hover:bg-zinc-900"
+                      className="w-full"
                     >
                       {subscription ? "Manage" : "Subscribe"}
                     </Button>
@@ -187,7 +178,6 @@ export function Pricing({ user, products, subscription }: Props) {
               );
             })}
           </div>
-          <LogoCloud />
         </div>
       </section>
     );

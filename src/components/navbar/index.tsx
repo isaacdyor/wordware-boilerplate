@@ -15,14 +15,13 @@ import { cn } from "@/lib/utils";
 
 export const navItems = [
   { title: "Home", href: "/" },
-  { title: "About", href: "/about" },
-  { title: "Services", href: "/services" },
-  { title: "Contact", href: "/contact" },
+  { title: "Docs", href: "/docs" },
+  { title: "Pricing (free)", href: "/pricing" },
 ];
 
 export function Navbar() {
   return (
-    <div className="w-full top-0 z-40 absolute px-4 lg:px-24 xl:px-36 bg-transparent">
+    <div className="absolute top-0 z-40 w-full bg-transparent px-4 lg:px-24 xl:px-36">
       <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
@@ -39,7 +38,7 @@ export function Navbar() {
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "bg-transparent"
+                        "bg-transparent",
                       )}
                     >
                       {item.title}
