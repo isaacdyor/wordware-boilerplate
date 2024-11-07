@@ -35,6 +35,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     request.nextUrl.pathname.startsWith("/api") ||
+    request.nextUrl.pathname.startsWith("/dashboard") ||
     request.nextUrl.pathname.startsWith("/auth")
   ) {
     return NextResponse.next();
